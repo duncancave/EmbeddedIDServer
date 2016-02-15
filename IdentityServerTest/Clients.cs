@@ -17,8 +17,9 @@
                                    ClientName = "MVC Client",
                                    ClientId = "mvc",
                                    Flow = Flows.Implicit,
+                                   AllowAccessToAllScopes = true,
                                    RedirectUris = new List<string> { "https://localhost:44301/" },
-                                   AllowAccessToAllScopes = true
+                                   PostLogoutRedirectUris = new List<string> { "https://localhost:44301/" } // Url to go to when user logs out
                                }
                        };
         }

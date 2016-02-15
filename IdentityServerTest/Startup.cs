@@ -16,7 +16,8 @@
     using Microsoft.Owin.Security.OpenIdConnect;
 
     using Owin;
-
+    using Microsoft.IdentityModel.Protocols;
+    using System.Threading.Tasks;
     public class Startup
     {
         public void Configuration(IAppBuilder app)
@@ -79,12 +80,32 @@
                                                         nid.AddClaim(sub);
                                                         nid.AddClaims(roles);
 
+                                                        // keep the id_token for Logout - the client has to prove its identity to the 
+                                                        // logout endpoint to make sure we redirect to the right URL (and not some spammer/phishing page).
+                                                        nid.AddClaim(new Claim("id_token", n.ProtocolMessage.IdToken));
+
                                                         // add some other app specific claim
                                                         n.AuthenticationTicket = new AuthenticationTicket(
                                                             nid,
                                                             n.AuthenticationTicket.Properties);
+                                                    },
+
+                            // attach the id_token when the user logs out and we make the roundtrip to IdentityServer.
+                            RedirectToIdentityProvider = n =>
+                                                    {
+                                                        if (n.ProtocolMessage.RequestType == OpenIdConnectRequestType.LogoutRequest)
+                                                        {
+                                                            var idTokenHint = n.OwinContext.Authentication.User.FindFirst("id_token");
+
+                                                            if (idTokenHint != null)
+                                                            {
+                                                                n.ProtocolMessage.IdTokenHint = idTokenHint.Value;
+                                                            }
+                                                        }
+
+                                                        return Task.FromResult(0);
                                                     }
-                                            }
+                        }
                     });
 
             app.UseResourceAuthorization(new AuthorizationManager());

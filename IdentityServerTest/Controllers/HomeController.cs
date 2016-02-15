@@ -1,6 +1,7 @@
 ﻿namespace IdentityServerTest.Controllers
 {
     using System.Security.Claims;
+    using System.Web;
     using System.Web.Mvc;
     using Thinktecture.IdentityModel.Mvc;
     public class HomeController : Controller
@@ -33,6 +34,12 @@
             ViewBag.Message = "Update your contact details!";
 
             return View();
+        }
+
+        public ActionResult Logout()
+        {
+            Request.GetOwinContext().Authentication.SignOut();
+            return Redirect("/");
         }
     }
 }
