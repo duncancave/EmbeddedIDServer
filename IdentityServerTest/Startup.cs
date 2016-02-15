@@ -18,6 +18,7 @@
     using Owin;
     using Microsoft.IdentityModel.Protocols;
     using System.Threading.Tasks;
+    using Microsoft.Owin.Security.Facebook;
     public class Startup
     {
         public void Configuration(IAppBuilder app)
@@ -38,7 +39,13 @@
                                         new IdentityServerServiceFactory().UseInMemoryUsers(
                                             Users.Get())
                                         .UseInMemoryClients(Clients.Get())
-                                        .UseInMemoryScopes(Scopes.Get())
+                                        .UseInMemoryScopes(Scopes.Get()),
+
+                                    // Use this for Facebook login 
+                                    //AuthenticationOptions = new IdentityServer3.Core.Configuration.AuthenticationOptions
+                                    //{
+                                    //    IdentityProviders = ConfigureIdentityProviders
+                                    //}
                                 });
                     });
 
@@ -109,6 +116,18 @@
                     });
 
             app.UseResourceAuthorization(new AuthorizationManager());
+        }
+
+        private void ConfigureIdentityProviders(IAppBuilder app, string signInAsType)
+        {
+            app.UseFacebookAuthentication(new FacebookAuthenticationOptions
+            {
+                AuthenticationType = "Facebook",
+                Caption = "Sign-in with Facebook",
+                SignInAsAuthenticationType = signInAsType,
+                AppId = "",
+                AppSecret = ""
+            });
         }
 
         X509Certificate2 LoadCertificate()
