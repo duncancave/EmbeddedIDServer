@@ -86,6 +86,8 @@
                                                     }
                                             }
                     });
+
+            app.UseResourceAuthorization(new AuthorizationManager());
         }
 
         X509Certificate2 LoadCertificate()
