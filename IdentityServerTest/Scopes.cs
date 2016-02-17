@@ -16,7 +16,15 @@
                                          Name = "roles",
                                          Type = ScopeType.Identity,
                                          Claims = new List<ScopeClaim> { new ScopeClaim("role") }
-                                     }
+                                     },
+                                 new Scope
+                                 {
+                                    Enabled = true,
+                                    DisplayName = "Sample API",
+                                    Name = "sampleApi",
+                                    Description = "Access to a sample API",
+                                    Type = ScopeType.Resource
+                                 }
                              };
 
             scopes.AddRange(StandardScopes.All);
