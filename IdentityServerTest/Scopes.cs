@@ -23,7 +23,8 @@
                                     DisplayName = "Sample API",
                                     Name = "sampleApi",
                                     Description = "Access to a sample API",
-                                    Type = ScopeType.Resource
+                                    Type = ScopeType.Resource,
+                                    Claims = new List<ScopeClaim> { new ScopeClaim("role") }
                                  }
                              };
 

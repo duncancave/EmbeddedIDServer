@@ -1,6 +1,7 @@
 ﻿using IdentityModel.Client;
 using Newtonsoft.Json.Linq;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
@@ -13,6 +14,17 @@ namespace IdentityServerTest.Controllers
         {
             var response = await GetTokenAsync();
             var result = await CallApi(response.AccessToken);
+
+            ViewBag.Json = result;
+            return View("ShowApiResult");
+        }
+
+        // GET: CallApi/UserCredentials
+        public async Task<ActionResult> UserCredentials()
+        {
+            var user = User as ClaimsPrincipal;
+            var token = user.FindFirst("access_token").Value;
+            var result = await CallApi(token);
 
             ViewBag.Json = result;
             return View("ShowApiResult");
